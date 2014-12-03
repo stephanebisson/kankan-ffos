@@ -150,9 +150,9 @@
 					var x = this.touch ? this.state.lastX : e.pageX;
 					var threshold = 30;
 					var page = this.state.currentPage;
-					if (this.getOffsetPercent(x) < -threshold) {
+					if (this.getOffsetPercent(x) < -threshold && page < 3) {
 						page++;
-					} else if (this.getOffsetPercent(x) > threshold) {
+					} else if (this.getOffsetPercent(x) > threshold && page > 1) {
 						page--;
 					}
 					var position = this.getCurrentPosition(page, false, 0);
