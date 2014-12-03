@@ -1,5 +1,6 @@
 - cleanup, profiling, optimization
 
+- transition based on velocity OR offset
 - infinite scrolling (with only 3 panes in DOM)
 - options for no header
 - kankan interface with hardcoded data file
