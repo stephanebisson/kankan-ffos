@@ -106,7 +106,7 @@ var Carousel = React.createClass({
 	render: function() {
 		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
 		return (
-			<div className="container-small" ref="container">
+			<div className="container-fullscreen" ref="container">
 				<ul className={this.getPanesClasses('panes')} style={style} {...this.events}>
 					{this.props.children.map(this.renderItem)}
 				</ul>
