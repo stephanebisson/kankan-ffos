@@ -1,0 +1,209 @@
+<html>
+<head>
+	<title></title>
+	<script src="react-0.12.1.js"></script>
+	<script src="JSXTransformer-0.12.1.js"></script>
+	<style type="text/css">
+		body {
+			background-color: black;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		.panes {
+			list-style: none;
+			position: relative;
+			width: 300%;
+			height: 80%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+
+		.animate {
+			-webkit-transition: all 500ms ease;
+			-moz-transition: all 500ms ease;
+			-o-transition: all 500ms ease;
+			-ms-transition: all 500ms ease;
+			transition: all 500ms ease;
+		}
+
+		.panes > li {
+			position: relative;
+			float: left;
+			width: 33%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+
+		.panes > li.current {
+			width: 34%;
+		}
+
+		.headers {
+			width: 100%;
+			height: 20%;
+			background-color: yellow;
+			list-style: none;
+			position: relative;
+			margin: 0;
+			padding: 0;
+		}
+
+		.headers > li {
+			position: relative;
+			float: left;
+			width: 25%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+
+			vertical-align: middle;
+			text-align: center;
+
+			text-transform: capitalize;
+			font-size: 2em;
+		}
+
+		.headers > li.current {
+			width: 50%;
+		}
+
+		.bleu {
+			background-color: blue;
+		}
+
+		.blanc {
+			background-color: white;
+		}
+
+		.rouge {
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+	<div id="mountPoint"></div>
+
+	<script type="text/jsx">
+		// React.initializeTouchEvents(true);
+
+		var Carousel = React.createClass({
+			componentWillMount: function() {
+				// console.log('componentWillMount', window.innerWidth, window.innerHeight);
+			},
+			getInitialState: function() {
+				var firstPage = 2;
+				return {
+					down: false,
+					startX: 0,
+					currentPage: firstPage,
+					position: this.getPagePosition(firstPage),
+					animate: false
+				};
+			},
+			getPagePosition: function(page) {
+				return {1: 0, 2: -100, 3: -200}[page];
+			},
+			getOffsetPercent: function(currentX) {
+				var offset = currentX - this.state.startX;
+				return offset / window.innerWidth * 100;
+			},
+			getCurrentPosition: function(page, down, currentX) {
+				var position = this.getPagePosition(page);
+				if (down) {
+					position += this.getOffsetPercent(currentX);
+				}
+				return position;
+			},
+			bounded: function(current, min, max) {
+				if (current < min) {
+					return min;
+				} else if (current > max) {
+					return max;
+				} else {
+					return current;
+				}
+			},
+			mouseDown: function(e) {
+				// console.log('touchStart', e);
+				this.setState({down: true, startX: e.pageX, animate: false});
+			},
+			mouseUp: function(e) {
+				if (this.state.down) {
+					var threshold = 30;
+					// console.log('UP', e.pageX);
+					var page = this.state.currentPage;
+					if (this.getOffsetPercent(e.pageX) < -threshold) {
+						page++;
+					} else if (this.getOffsetPercent(e.pageX) > threshold) {
+						page--;
+					}
+					var position = this.getCurrentPosition(page, false, 0);
+					this.setState({down: false, startX: 0, currentPage: page, position: position, animate: true});
+				}
+			},
+			mouseMove: function(e) {
+				// console.log('touchMove', e);
+				if (this.state.down) {
+					var offsetX = e.pageX - this.state.startX;
+					var position = this.getCurrentPosition(this.state.currentPage, true, e.pageX);
+					position = this.bounded(position, this.getPagePosition(3), this.getPagePosition(1));
+					this.setState({position: position, animate: false});
+				}
+			},
+			getPageClasses: function(baseClass, pageNumber) {
+				var classes = [baseClass];
+				if (pageNumber === this.state.currentPage) {
+					classes.push('current');
+				}
+				return classes.join(' ');
+			},
+			getPanesClasses: function(baseClass) {
+				var classes = [baseClass];
+				if (this.state.animate) {
+					classes.push('animate');
+				}
+				return classes.join(' ');
+			},
+			selectPage: function(pageNumber) {
+				return function(evt) {
+					console.log('on click', pageNumber, arguments);
+					if (pageNumber !== this.state.currentPage) {
+						this.setState({currentPage: pageNumber, position: this.getPagePosition(pageNumber), animate: true});
+					}
+				}.bind(this);
+			},
+			render: function() {
+				var style = {left: this.state.position + '%'};
+				return (
+					<div className="container" onMouseDown={this.mouseDown} onMouseMove={this.mouseMove} onMouseUp={this.mouseUp} onMouseOut={this.mouseUp}>
+						<ul className="headers">
+							<li className={this.getPageClasses('bleu', 1)} onClick={this.selectPage(1)}>one</li>
+							<li className={this.getPageClasses('blanc', 2)} onClick={this.selectPage(2)}>two</li>
+							<li className={this.getPageClasses('rouge', 3)} onClick={this.selectPage(3)}>three</li>
+						</ul>
+						<ul className={this.getPanesClasses('panes')} style={style}>
+							<li className={this.getPageClasses('bleu', 1)}></li>
+							<li className={this.getPageClasses('blanc', 2)}></li>
+							<li className={this.getPageClasses('rouge', 3)}></li>
+						</ul>
+					</div>
+				);
+			}
+		});
+
+		React.render(<Carousel />, document.getElementById('mountPoint'));
+	</script>
+
+</body>
+</html>
