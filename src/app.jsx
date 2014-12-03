@@ -1,15 +1,22 @@
 var Carousel = React.createClass({
 	componentWillMount: function() {
-		this.touch = 'ontouchstart' in window;
-		if (this.touch) {
+		var touch = 'ontouchstart' in window;
+		if (touch) {
 			React.initializeTouchEvents(true);			
 		}
+		this.events = {};
+		this.events[touch ? 'onTouchStart' : 'onMouseDown'] = this.start;
+		this.events[touch ? 'onTouchEnd' : 'onMouseUp'] = this.end;
+		this.events[touch ? 'onTouchCancel' : 'onMouseOut'] = this.end;
+		this.events[touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
+
+		this.childrenCount = this.props.children.length;
 	},
 	componentDidMount: function() {
 		this.containerWidth = this.refs.container.getDOMNode().offsetWidth;
 	},
 	getInitialState: function() {
-		var firstPage = 2;
+		var firstPage = 0;
 		return {
 			down: false,
 			startX: 0,
@@ -18,8 +25,8 @@ var Carousel = React.createClass({
 			animate: false
 		};
 	},
-	getPagePosition: function(page) {
-		return {1: 0, 2: -100, 3: -200}[page];
+	getPagePosition: function(pageNumber) {
+		return pageNumber * -100;
 	},
 	getOffsetPercent: function(currentX) {
 		var offset = currentX - this.state.startX;
@@ -41,10 +48,12 @@ var Carousel = React.createClass({
 			return current;
 		}
 	},
+	getX: function(e) {
+		return this.touch ? e.touches[0].clientX : e.clientX;
+	},
 	start: function(e) {
-		var x = this.touch ? e.touches[0].clientX : e.clientX;
 		// console.log('start', x);
-		this.setState({down: true, startX: x, animate: false});
+		this.setState({down: true, startX: this.getX(e), animate: false});
 	},
 	end: function(e) {
 		// console.log('end', e);
@@ -53,9 +62,9 @@ var Carousel = React.createClass({
 			var x = this.touch ? this.state.lastX : e.clientX;
 			var threshold = 30;
 			var page = this.state.currentPage;
-			if (this.getOffsetPercent(x) < -threshold && page < 3) {
+			if (this.getOffsetPercent(x) < -threshold && page < (this.childrenCount - 1)) {
 				page++;
-			} else if (this.getOffsetPercent(x) > threshold && page > 1) {
+			} else if (this.getOffsetPercent(x) > threshold && page > 0) {
 				page--;
 			}
 			var position = this.getCurrentPosition(page, false, 0);
@@ -65,19 +74,12 @@ var Carousel = React.createClass({
 	move: function(e) {
 		// console.log('move', e);
 		if (this.state.down) {
-			var x = this.touch ? e.touches[0].clientX : e.clientX;
+			var x = this.getX(e);
 			var offsetX = x - this.state.startX;
 			var position = this.getCurrentPosition(this.state.currentPage, true, x);
-			position = this.bounded(position, this.getPagePosition(3), this.getPagePosition(1));
+			position = this.bounded(position, this.getPagePosition(this.childrenCount - 1), this.getPagePosition(0));
 			this.setState({position: position, animate: false, lastX: x});
 		}
-	},
-	getPageClasses: function(baseClass, pageNumber) {
-		var classes = [baseClass];
-		if (pageNumber === this.state.currentPage) {
-			classes.push('current');
-		}
-		return classes.join(' ');
 	},
 	getPanesClasses: function(baseClass) {
 		var classes = [baseClass];
@@ -94,29 +96,38 @@ var Carousel = React.createClass({
 			}
 		}.bind(this);
 	},
+	renderHeader: function(page, index) {
+		return <li onClick={this.selectPage(index)}>{page.name}</li>;
+	},
+	renderItem: function(page, index) {
+		var style = {width: (100/this.childrenCount) + '%'};
+		return <li className={this.getPanesClasses()} style={style}>{page}</li>;
+	},
 	render: function() {
-		var events = {};
-		events[this.touch ? 'onTouchStart' : 'onMouseDown'] = this.start;
-		events[this.touch ? 'onTouchEnd' : 'onMouseUp'] = this.end;
-		events[this.touch ? 'onTouchCancel' : 'onMouseOut'] = this.end;
-		events[this.touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
-
-		var style = {left: this.state.position + '%'};
+		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
 		return (
 			<div className="container-small" ref="container">
-				<ul className="headers">
-					<li className={this.getPageClasses('bleu', 1)} onClick={this.selectPage(1)}>one</li>
-					<li className={this.getPageClasses('blanc', 2)} onClick={this.selectPage(2)}>two</li>
-					<li className={this.getPageClasses('rouge', 3)} onClick={this.selectPage(3)}>three</li>
-				</ul>
-				<ul className={this.getPanesClasses('panes')} style={style} {...events}>
-					<li className={this.getPageClasses('bleu', 1)}></li>
-					<li className={this.getPageClasses('blanc', 2)}></li>
-					<li className={this.getPageClasses('rouge', 3)}></li>
+				<ul className={this.getPanesClasses('panes')} style={style} {...this.events}>
+					{this.props.children.map(this.renderItem)}
 				</ul>
 			</div>
 		);
 	}
 });
 
-React.render(<Carousel />, document.getElementById('mountPoint'));
+
+var MyApp = React.createClass({
+	render: function() {
+		return (
+			<Carousel>
+				<img src="http://lorempixel.com/600/300/abstract"/>
+				<img src="http://lorempixel.com/600/300/city"/>
+				<img src="http://lorempixel.com/600/300/food"/>
+				<img src="http://lorempixel.com/600/300/cats"/>
+			</Carousel>
+		);
+	}
+});
+
+React.render(<MyApp />, document.getElementById('mountPoint'));
+

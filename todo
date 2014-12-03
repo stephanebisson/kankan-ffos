@@ -1,3 +1,6 @@
+GOAL: separate component from usage
+
+
 - cleanup, profiling, optimization
 - transition based on velocity OR offset
 - infinite scrolling (with only 3 panes in DOM)

@@ -4,6 +4,12 @@ body {
 	padding: 0;
 }
 
+img {
+	user-drag: none; 
+	-moz-user-select: none;
+	-webkit-user-drag: none;
+}
+
 .container-fullscreen {
 	width: 100%;
 	height: 100%;
@@ -23,8 +29,7 @@ body {
 .panes {
 	list-style: none;
 	position: relative;
-	width: 300%;
-	height: 80%;
+	height: 100%;
 	margin: 0;
 	padding: 0;
 	overflow: hidden;
@@ -41,14 +46,9 @@ body {
 .panes > li {
 	position: relative;
 	float: left;
-	width: 33%;
 	height: 100%;
 	margin: 0;
 	padding: 0;
-}
-
-.panes > li.current {
-	width: 34%;
 }
 
 .headers {
@@ -64,7 +64,6 @@ body {
 .headers > li {
 	position: relative;
 	float: left;
-	width: 33.33%;
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -74,20 +73,4 @@ body {
 
 	text-transform: capitalize;
 	font-size: 2em;
-}
-
-.headers > li.current {
-
-}
-
-.bleu {
-	background-color: blue;
-}
-
-.blanc {
-	background-color: white;
-}
-
-.rouge {
-	background-color: red;
 }
