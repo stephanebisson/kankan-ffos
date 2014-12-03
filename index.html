@@ -95,7 +95,7 @@
 	<div id="mountPoint"></div>
 
 	<script type="text/jsx">
-		// React.initializeTouchEvents(true);
+		React.initializeTouchEvents(true);
 
 		var Carousel = React.createClass({
 			componentWillMount: function() {
@@ -134,11 +134,11 @@
 					return current;
 				}
 			},
-			mouseDown: function(e) {
+			start: function(e) {
 				// console.log('touchStart', e);
 				this.setState({down: true, startX: e.pageX, animate: false});
 			},
-			mouseUp: function(e) {
+			end: function(e) {
 				if (this.state.down) {
 					var threshold = 30;
 					// console.log('UP', e.pageX);
@@ -152,7 +152,7 @@
 					this.setState({down: false, startX: 0, currentPage: page, position: position, animate: true});
 				}
 			},
-			mouseMove: function(e) {
+			move: function(e) {
 				// console.log('touchMove', e);
 				if (this.state.down) {
 					var offsetX = e.pageX - this.state.startX;
@@ -177,22 +177,29 @@
 			},
 			selectPage: function(pageNumber) {
 				return function(evt) {
-					console.log('on click', pageNumber, arguments);
+					// console.log('on click', pageNumber, arguments);
 					if (pageNumber !== this.state.currentPage) {
 						this.setState({currentPage: pageNumber, position: this.getPagePosition(pageNumber), animate: true});
 					}
 				}.bind(this);
 			},
 			render: function() {
+				var touch = 'ontouchstart' in window;
+				var events = {};
+				events[touch ? 'onTouchStart' : 'onMouseDown'] = this.start;
+				events[touch ? 'onTouchEnd' : 'onMouseUp'] = this.end;
+				events[touch ? 'onTouchCancel' : 'onMouseOut'] = this.end;
+				events[touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
+
 				var style = {left: this.state.position + '%'};
 				return (
-					<div className="container" onMouseDown={this.mouseDown} onMouseMove={this.mouseMove} onMouseUp={this.mouseUp} onMouseOut={this.mouseUp}>
+					<div className="container">
 						<ul className="headers">
 							<li className={this.getPageClasses('bleu', 1)} onClick={this.selectPage(1)}>one</li>
 							<li className={this.getPageClasses('blanc', 2)} onClick={this.selectPage(2)}>two</li>
 							<li className={this.getPageClasses('rouge', 3)} onClick={this.selectPage(3)}>three</li>
 						</ul>
-						<ul className={this.getPanesClasses('panes')} style={style}>
+						<ul className={this.getPanesClasses('panes')} style={style} {...events}>
 							<li className={this.getPageClasses('bleu', 1)}></li>
 							<li className={this.getPageClasses('blanc', 2)}></li>
 							<li className={this.getPageClasses('rouge', 3)}></li>
