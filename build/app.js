@@ -120,10 +120,10 @@ var MyApp = React.createClass({displayName: 'MyApp',
 	render: function() {
 		return (
 			React.createElement(Carousel, null, 
+				React.createElement("img", {src: "http://lorempixel.com/600/300/cats"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/abstract"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/city"}), 
-				React.createElement("img", {src: "http://lorempixel.com/600/300/food"}), 
-				React.createElement("img", {src: "http://lorempixel.com/600/300/cats"})
+				React.createElement("img", {src: "http://lorempixel.com/600/300/food"})
 			)
 		);
 	}

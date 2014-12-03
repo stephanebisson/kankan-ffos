@@ -120,10 +120,10 @@ var MyApp = React.createClass({
 	render: function() {
 		return (
 			<Carousel>
+				<img src="http://lorempixel.com/600/300/cats"/>
 				<img src="http://lorempixel.com/600/300/abstract"/>
 				<img src="http://lorempixel.com/600/300/city"/>
 				<img src="http://lorempixel.com/600/300/food"/>
-				<img src="http://lorempixel.com/600/300/cats"/>
 			</Carousel>
 		);
 	}
