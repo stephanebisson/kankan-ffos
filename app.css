@@ -1,0 +1,85 @@
+body {
+	background-color: black;
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.panes {
+	list-style: none;
+	position: relative;
+	width: 300%;
+	height: 80%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.animate {
+	-webkit-transition: all 500ms ease;
+	-moz-transition: all 500ms ease;
+	-o-transition: all 500ms ease;
+	-ms-transition: all 500ms ease;
+	transition: all 500ms ease;
+}
+
+.panes > li {
+	position: relative;
+	float: left;
+	width: 33%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.panes > li.current {
+	width: 34%;
+}
+
+.headers {
+	width: 100%;
+	height: 20%;
+	background-color: yellow;
+	list-style: none;
+	position: relative;
+	margin: 0;
+	padding: 0;
+}
+
+.headers > li {
+	position: relative;
+	float: left;
+	width: 25%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+
+	vertical-align: middle;
+	text-align: center;
+
+	text-transform: capitalize;
+	font-size: 2em;
+}
+
+.headers > li.current {
+	width: 50%;
+}
+
+.bleu {
+	background-color: blue;
+}
+
+.blanc {
+	background-color: white;
+}
+
+.rouge {
+	background-color: red;
+}
