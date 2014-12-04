@@ -20,7 +20,8 @@ var Carousel = React.createClass({
 			: function(e) { return e.clientX };
 	},
 	componentDidMount: function() {
-		this.containerWidth = this.refs.container.getDOMNode().offsetWidth;
+		this.containerWidth = this.refs.container.getDOMNode().getBoundingClientRect().width;
+		this.setState({info: 'width: ' + this.containerWidth});
 	},
 	getInitialState: function() {
 		var firstPage = 0;
