@@ -136,7 +136,7 @@ var CarouselItem = React.createClass({displayName: 'CarouselItem',
 var MyApp = React.createClass({displayName: 'MyApp',
 	render: function() {
 		return (
-			React.createElement(Carousel, {className: "container-small"}, 
+			React.createElement(Carousel, {className: "container-fullscreen"}, 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/cats"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/abstract"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/city"}), 

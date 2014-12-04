@@ -136,7 +136,7 @@ var CarouselItem = React.createClass({
 var MyApp = React.createClass({
 	render: function() {
 		return (
-			<Carousel className="container-small">
+			<Carousel className="container-fullscreen">
 				<img src="http://lorempixel.com/600/300/cats"/>
 				<img src="http://lorempixel.com/600/300/abstract"/>
 				<img src="http://lorempixel.com/600/300/city"/>
