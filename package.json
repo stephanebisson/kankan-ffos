@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "build": "browserify -t reactify ./src/main.jsx -o main.js",
-    "build-watch": "watchify -t reactify ./src/main.jsx -o main.js"
+    "build": "browserify -t reactify ./app/src/main.jsx -o ./app/build/main.js",
+    "build-watch": "watchify -t reactify ./app/src/main.jsx -o ./app/build/main.js"
   },
   "repository": {
     "type": "git",
