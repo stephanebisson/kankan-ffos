@@ -11,6 +11,13 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		this.events[this.touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
 
 		this.childrenCount = this.props.children.length;
+
+		this.minPosition = this.getPagePosition(this.childrenCount - 1);
+		this.maxPosition = this.getPagePosition(0);
+
+		this.getX = this.touch
+			? function(e) { return e.touches[0].clientX; }
+			: function(e) { return e.clientX };
 	},
 	componentDidMount: function() {
 		this.containerWidth = this.refs.container.getDOMNode().offsetWidth;
@@ -48,9 +55,6 @@ var Carousel = React.createClass({displayName: 'Carousel',
 			return current;
 		}
 	},
-	getX: function(e) {
-		return this.touch ? e.touches[0].clientX : e.clientX;
-	},
 	start: function(e) {
 		var x = this.getX(e);
 		// console.log('start', x);
@@ -63,9 +67,9 @@ var Carousel = React.createClass({displayName: 'Carousel',
 			var x = this.touch ? this.state.lastX : e.clientX;
 			var threshold = 30;
 			var page = this.state.currentPage;
-			if (this.getOffsetPercent(x) < -threshold && page < (this.childrenCount - 1)) {
+			if (page < (this.childrenCount - 1) && this.getOffsetPercent(x) < -threshold) {
 				page++;
-			} else if (this.getOffsetPercent(x) > threshold && page > 0) {
+			} else if (page > 0 && this.getOffsetPercent(x) > threshold) {
 				page--;
 			}
 			var position = this.getCurrentPosition(page, false, 0);
@@ -76,9 +80,8 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		if (this.state.down) {
 			// console.log('move');
 			var x = this.getX(e);
-			var offsetX = x - this.state.startX;
 			var position = this.getCurrentPosition(this.state.currentPage, true, x);
-			position = this.bounded(position, this.getPagePosition(this.childrenCount - 1), this.getPagePosition(0));
+			position = this.bounded(position, this.minPosition, this.maxPosition);
 			this.setState({position: position, animate: false, lastX: x});
 		}
 	},
@@ -90,8 +93,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		return classes.join(' ');
 	},
 	selectPage: function(pageNumber) {
-		return function(evt) {
-			// console.log('on click', pageNumber, arguments);
+		return function() {
 			if (pageNumber !== this.state.currentPage) {
 				this.setState({currentPage: pageNumber, position: this.getPagePosition(pageNumber), animate: true});
 			}
@@ -101,8 +103,8 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		return React.createElement("li", {onClick: this.selectPage(index)}, page.name);
 	},
 	renderItem: function(page, index) {
-		var style = {width: (100/this.childrenCount) + '%'};
-		return React.createElement("li", {className: this.getPanesClasses(), style: style}, page);
+		var width = (100/this.childrenCount) + '%';
+		return React.createElement(CarouselItem, {width: width, key: index}, page);
 	},
 	noDrag: function(e) {
 		e.preventDefault();
@@ -111,7 +113,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 	render: function() {
 		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
 		return (
-			React.createElement("div", {className: "container-fullscreen", ref: "container"}, 
+			React.createElement("div", React.__spread({ref: "container"},  this.props), 
 				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events, {onDragStart: this.noDrag}), 
 					this.props.children.map(this.renderItem)
 				)
@@ -120,11 +122,21 @@ var Carousel = React.createClass({displayName: 'Carousel',
 	}
 });
 
+var CarouselItem = React.createClass({displayName: 'CarouselItem',
+	shouldComponentUpdate: function() {
+		return false;
+	},
+	render: function() {
+		var style = {width: this.props.width};
+		return React.createElement("li", {style: style}, this.props.children);
+	}
+});
+
 
 var MyApp = React.createClass({displayName: 'MyApp',
 	render: function() {
 		return (
-			React.createElement(Carousel, null, 
+			React.createElement(Carousel, {className: "container-small"}, 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/cats"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/abstract"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/city"}), 
