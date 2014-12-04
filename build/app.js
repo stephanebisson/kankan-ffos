@@ -21,7 +21,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 	},
 	componentDidMount: function() {
 		this.containerWidth = this.refs.container.getDOMNode().getBoundingClientRect().width;
-		this.setState({info: 'width: ' + this.containerWidth});
+		// this.setState({info: 'width: ' + this.containerWidth});
 	},
 	getInitialState: function() {
 		var firstPage = 0;
@@ -31,7 +31,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 			currentPage: firstPage,
 			position: this.getPagePosition(firstPage),
 			animate: false,
-			info: 'this is the info bar'
+			info: ''
 		};
 	},
 	getPagePosition: function(pageNumber) {

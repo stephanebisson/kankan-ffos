@@ -90,6 +90,7 @@ img {
 	margin: auto;
 	text-align: center;
 	z-index: 99;
+	display: none;
 }
 
 
