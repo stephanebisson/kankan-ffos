@@ -1,0 +1,38 @@
+{
+  "name": "kankan-ffos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "build": "browserify -t reactify ./src/main.jsx -o main.js",
+    "build-watch": "watchify -t reactify ./src/main.jsx -o main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stephanebisson/kankan-ffos.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stephanebisson/kankan-ffos/issues"
+  },
+  "homepage": "https://github.com/stephanebisson/kankan-ffos",
+  "devDependencies": {
+    "browserify": "^7.0.0",
+    "reactify": "^0.17.1",
+    "watchify": "^2.1.1"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "reactify",
+        {
+          "es6": true
+        }
+      ]
+    ]
+  },
+  "dependencies": {
+    "react": "^0.12.1"
+  }
+}

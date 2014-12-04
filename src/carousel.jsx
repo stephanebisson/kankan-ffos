@@ -1,4 +1,6 @@
-var Carousel = React.createClass({displayName: 'Carousel',
+var React = require('react');
+
+var Carousel = React.createClass({
 	componentWillMount: function() {
 		this.touch = 'ontouchstart' in window;
 		if (this.touch) {
@@ -20,7 +22,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 			: function(e) { return e.clientX };
 	},
 	componentDidMount: function() {
-		this.containerWidth = this.refs.container.getDOMNode().getBoundingClientRect().width;
+		this.containerWidth = this.refs.container.getDOMNode().offsetWidth;
 		// this.setState({info: 'width: ' + this.containerWidth});
 	},
 	getInitialState: function() {
@@ -110,18 +112,18 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		if (index === this.state.currentPage) {
 			attributes.className = 'active';
 		}
-		return React.createElement("li", React.__spread({},  attributes), index);
+		return <li {...attributes}>{index}</li>;
 	},
 	renderHeaders: function() {
 		return (
-			React.createElement("ul", {className: "headers"}, 
-				this.props.children.map(this.renderHeader)
-			)
+			<ul className="headers">
+				{this.props.children.map(this.renderHeader)}
+			</ul>
 		);
 	},
 	renderItem: function(page, index) {
 		var width = (100/this.childrenCount) + '%';
-		return React.createElement(CarouselItem, {width: width, key: index}, page);
+		return <CarouselItem width={width} key={index}>{page}</CarouselItem>;
 	},
 	noDrag: function(e) {
 		e.preventDefault();
@@ -135,46 +137,32 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		};
 		if (this.props.header) {
 			var headerContent = (
-				React.createElement("ul", {className: "headers"}, 
-					this.props.children.map(this.renderHeader)
-				)
+				<ul className="headers">
+					{this.props.children.map(this.renderHeader)}
+				</ul>
 			);
 		}
 		return (
-			React.createElement("div", React.__spread({ref: "container"},  this.props), 
-				this.props.header ? this.renderHeaders() : '', 
-				React.createElement("div", {className: "info-bar"}, this.state.info), 
-				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events, {onDragStart: this.noDrag}), 
-					this.props.children.map(this.renderItem)
-				)
-			)
+			<div ref="container" {...this.props}>
+				{this.props.header ? this.renderHeaders() : ''}
+				<div className="info-bar">{this.state.info}</div>
+				<ul className={this.getPanesClasses('panes')} style={style} {...this.events} onDragStart={this.noDrag}>
+					{this.props.children.map(this.renderItem)}
+				</ul>
+			</div>
 		);
 	}
 });
 
-var CarouselItem = React.createClass({displayName: 'CarouselItem',
+var CarouselItem = React.createClass({
 	shouldComponentUpdate: function() {
 		return false;
 	},
 	render: function() {
 		var style = {width: this.props.width};
-		return React.createElement("li", {style: style}, this.props.children);
+		return <li style={style}>{this.props.children}</li>;
 	}
 });
 
-
-var MyApp = React.createClass({displayName: 'MyApp',
-	render: function() {
-		return (
-			React.createElement(Carousel, {className: "container-fullscreen", header: false}, 
-				React.createElement("img", {src: "http://lorempixel.com/600/300/cats"}), 
-				React.createElement("img", {src: "http://lorempixel.com/600/300/abstract"}), 
-				React.createElement("img", {src: "http://lorempixel.com/600/300/city"}), 
-				React.createElement("img", {src: "http://lorempixel.com/600/300/food"})
-			)
-		);
-	}
-});
-
-React.render(React.createElement(MyApp, null), document.getElementById('mountPoint'));
+module.exports = Carousel;
 
