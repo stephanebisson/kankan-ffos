@@ -32,6 +32,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		this.events[this.touch ? 'onTouchEnd' : 'onMouseUp'] = this.end;
 		this.events[this.touch ? 'onTouchCancel' : 'onMouseOut'] = this.end;
 		this.events[this.touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
+		this.events.onDragStart = this.noDrag;
 
 		this.childrenCount = this.props.children.length;
 
@@ -88,7 +89,6 @@ var Carousel = React.createClass({displayName: 'Carousel',
 	end: function(e) {
 		// console.log('end');
 		if (this.state.down) {
-
 			var x = this.touch ? this.state.lastX : e.clientX;
 			var threshold = 30;
 			var page = this.state.currentPage;
@@ -143,7 +143,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		);
 	},
 	renderItem: function(page, index) {
-		var width = (100/this.childrenCount) + '%';
+		var width = (100 / this.childrenCount) + '%';
 		return React.createElement(CarouselItem, {width: width, key: index}, page);
 	},
 	noDrag: function(e) {
@@ -167,7 +167,7 @@ var Carousel = React.createClass({displayName: 'Carousel',
 			React.createElement("div", React.__spread({ref: "container"},  this.props), 
 				this.props.header ? this.renderHeaders() : '', 
 				React.createElement("div", {className: "info-bar"}, this.state.info), 
-				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events, {onDragStart: this.noDrag}), 
+				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events), 
 					this.props.children.map(this.renderItem)
 				)
 			)
