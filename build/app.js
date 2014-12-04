@@ -102,7 +102,22 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		}.bind(this);
 	},
 	renderHeader: function(page, index) {
-		return React.createElement("li", {onClick: this.selectPage(index)}, page.name);
+		var width = (100/this.childrenCount) + '%';
+		var attributes = {
+			style: {width: width},
+			onClick: this.selectPage(index)
+		};
+		if (index === this.state.currentPage) {
+			attributes.className = 'active';
+		}
+		return React.createElement("li", React.__spread({},  attributes), index);
+	},
+	renderHeaders: function() {
+		return (
+			React.createElement("ul", {className: "headers"}, 
+				this.props.children.map(this.renderHeader)
+			)
+		);
 	},
 	renderItem: function(page, index) {
 		var width = (100/this.childrenCount) + '%';
@@ -113,9 +128,21 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		e.stopPropagation();
 	},
 	render: function() {
-		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
+		var style = {
+			left: this.state.position + '%',
+			width: (this.childrenCount * 100) + '%',
+			height: this.props.header ? '80%' : '100%'
+		};
+		if (this.props.header) {
+			var headerContent = (
+				React.createElement("ul", {className: "headers"}, 
+					this.props.children.map(this.renderHeader)
+				)
+			);
+		}
 		return (
 			React.createElement("div", React.__spread({ref: "container"},  this.props), 
+				this.props.header ? this.renderHeaders() : '', 
 				React.createElement("div", {className: "info-bar"}, this.state.info), 
 				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events, {onDragStart: this.noDrag}), 
 					this.props.children.map(this.renderItem)
@@ -139,7 +166,7 @@ var CarouselItem = React.createClass({displayName: 'CarouselItem',
 var MyApp = React.createClass({displayName: 'MyApp',
 	render: function() {
 		return (
-			React.createElement(Carousel, {className: "container-fullscreen"}, 
+			React.createElement(Carousel, {className: "container-fullscreen", header: false}, 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/cats"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/abstract"}), 
 				React.createElement("img", {src: "http://lorempixel.com/600/300/city"}), 

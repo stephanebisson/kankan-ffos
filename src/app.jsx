@@ -102,7 +102,22 @@ var Carousel = React.createClass({
 		}.bind(this);
 	},
 	renderHeader: function(page, index) {
-		return <li onClick={this.selectPage(index)}>{page.name}</li>;
+		var width = (100/this.childrenCount) + '%';
+		var attributes = {
+			style: {width: width},
+			onClick: this.selectPage(index)
+		};
+		if (index === this.state.currentPage) {
+			attributes.className = 'active';
+		}
+		return <li {...attributes}>{index}</li>;
+	},
+	renderHeaders: function() {
+		return (
+			<ul className="headers">
+				{this.props.children.map(this.renderHeader)}
+			</ul>
+		);
 	},
 	renderItem: function(page, index) {
 		var width = (100/this.childrenCount) + '%';
@@ -113,9 +128,21 @@ var Carousel = React.createClass({
 		e.stopPropagation();
 	},
 	render: function() {
-		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
+		var style = {
+			left: this.state.position + '%',
+			width: (this.childrenCount * 100) + '%',
+			height: this.props.header ? '80%' : '100%'
+		};
+		if (this.props.header) {
+			var headerContent = (
+				<ul className="headers">
+					{this.props.children.map(this.renderHeader)}
+				</ul>
+			);
+		}
 		return (
 			<div ref="container" {...this.props}>
+				{this.props.header ? this.renderHeaders() : ''}
 				<div className="info-bar">{this.state.info}</div>
 				<ul className={this.getPanesClasses('panes')} style={style} {...this.events} onDragStart={this.noDrag}>
 					{this.props.children.map(this.renderItem)}
@@ -139,7 +166,7 @@ var CarouselItem = React.createClass({
 var MyApp = React.createClass({
 	render: function() {
 		return (
-			<Carousel className="container-fullscreen">
+			<Carousel className="container-fullscreen" header={false}>
 				<img src="http://lorempixel.com/600/300/cats"/>
 				<img src="http://lorempixel.com/600/300/abstract"/>
 				<img src="http://lorempixel.com/600/300/city"/>
