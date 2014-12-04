@@ -103,11 +103,14 @@ var Carousel = React.createClass({
 		var style = {width: (100/this.childrenCount) + '%'};
 		return <li className={this.getPanesClasses()} style={style}>{page}</li>;
 	},
+	noDrag: function(e) {
+		e.preventDefault();
+	},
 	render: function() {
 		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
 		return (
 			<div className="container-fullscreen" ref="container">
-				<ul className={this.getPanesClasses('panes')} style={style} {...this.events}>
+				<ul className={this.getPanesClasses('panes')} style={style} {...this.events} onDragStart={this.noDrag}>
 					{this.props.children.map(this.renderItem)}
 				</ul>
 			</div>

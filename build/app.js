@@ -103,11 +103,14 @@ var Carousel = React.createClass({displayName: 'Carousel',
 		var style = {width: (100/this.childrenCount) + '%'};
 		return React.createElement("li", {className: this.getPanesClasses(), style: style}, page);
 	},
+	noDrag: function(e) {
+		e.preventDefault();
+	},
 	render: function() {
 		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
 		return (
 			React.createElement("div", {className: "container-fullscreen", ref: "container"}, 
-				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events), 
+				React.createElement("ul", React.__spread({className: this.getPanesClasses('panes'), style: style},  this.events, {onDragStart: this.noDrag}), 
 					this.props.children.map(this.renderItem)
 				)
 			)
