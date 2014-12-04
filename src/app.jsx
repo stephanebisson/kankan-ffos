@@ -1,14 +1,14 @@
 var Carousel = React.createClass({
 	componentWillMount: function() {
-		var touch = 'ontouchstart' in window;
-		if (touch) {
+		this.touch = 'ontouchstart' in window;
+		if (this.touch) {
 			React.initializeTouchEvents(true);			
 		}
 		this.events = {};
-		this.events[touch ? 'onTouchStart' : 'onMouseDown'] = this.start;
-		this.events[touch ? 'onTouchEnd' : 'onMouseUp'] = this.end;
-		this.events[touch ? 'onTouchCancel' : 'onMouseOut'] = this.end;
-		this.events[touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
+		this.events[this.touch ? 'onTouchStart' : 'onMouseDown'] = this.start;
+		this.events[this.touch ? 'onTouchEnd' : 'onMouseUp'] = this.end;
+		this.events[this.touch ? 'onTouchCancel' : 'onMouseOut'] = this.end;
+		this.events[this.touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
 
 		this.childrenCount = this.props.children.length;
 	},
@@ -52,11 +52,12 @@ var Carousel = React.createClass({
 		return this.touch ? e.touches[0].clientX : e.clientX;
 	},
 	start: function(e) {
+		var x = this.getX(e);
 		// console.log('start', x);
-		this.setState({down: true, startX: this.getX(e), animate: false});
+		this.setState({down: true, startX: x, animate: false});
 	},
 	end: function(e) {
-		// console.log('end', e);
+		// console.log('end');
 		if (this.state.down) {
 
 			var x = this.touch ? this.state.lastX : e.clientX;
@@ -72,8 +73,8 @@ var Carousel = React.createClass({
 		}
 	},
 	move: function(e) {
-		// console.log('move', e);
 		if (this.state.down) {
+			// console.log('move');
 			var x = this.getX(e);
 			var offsetX = x - this.state.startX;
 			var position = this.getCurrentPosition(this.state.currentPage, true, x);
@@ -105,6 +106,7 @@ var Carousel = React.createClass({
 	},
 	noDrag: function(e) {
 		e.preventDefault();
+		e.stopPropagation();
 	},
 	render: function() {
 		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
