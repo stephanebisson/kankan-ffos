@@ -79,3 +79,19 @@ img {
 	text-transform: capitalize;
 	font-size: 2em;
 }
+
+.info-bar {
+	background-color: white;
+	color: black;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	text-align: center;
+	z-index: 99;
+}
+
+
+
+

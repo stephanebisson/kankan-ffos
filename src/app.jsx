@@ -29,7 +29,8 @@ var Carousel = React.createClass({
 			startX: 0,
 			currentPage: firstPage,
 			position: this.getPagePosition(firstPage),
-			animate: false
+			animate: false,
+			info: 'this is the info bar'
 		};
 	},
 	getPagePosition: function(pageNumber) {
@@ -82,7 +83,7 @@ var Carousel = React.createClass({
 			var x = this.getX(e);
 			var position = this.getCurrentPosition(this.state.currentPage, true, x);
 			position = this.bounded(position, this.minPosition, this.maxPosition);
-			this.setState({position: position, animate: false, lastX: x});
+			this.setState({position: position, animate: false, lastX: x, info: 'offset: ' + this.getOffsetPercent(x)});
 		}
 	},
 	getPanesClasses: function(baseClass) {
@@ -114,6 +115,7 @@ var Carousel = React.createClass({
 		var style = {left: this.state.position + '%', width: (this.childrenCount * 100) + '%'};
 		return (
 			<div ref="container" {...this.props}>
+				<div className="info-bar">{this.state.info}</div>
 				<ul className={this.getPanesClasses('panes')} style={style} {...this.events} onDragStart={this.noDrag}>
 					{this.props.children.map(this.renderItem)}
 				</ul>
