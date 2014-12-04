@@ -1,10 +1,7 @@
-GOAL: separate component from usage
+GOAL: configurable headers
 
-
-- cleanup, profiling, optimization
+- fix firefox android
 - transition based on velocity OR offset
 - infinite scrolling (with only 3 panes in DOM)
-- make a reusable component
-- options for no header OR externalize header from component
 
 - kankan interface with hardcoded data file
