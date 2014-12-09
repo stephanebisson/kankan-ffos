@@ -24,6 +24,7 @@ img {
 	margin: auto;
 	padding-top: 50px;
 	overflow: hidden;
+	background-color: pink;
 }
 
 .panes {
@@ -49,6 +50,7 @@ img {
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	color: teal;
 }
 
 .panes > li > * {
