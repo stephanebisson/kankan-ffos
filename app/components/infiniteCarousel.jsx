@@ -13,27 +13,35 @@ var InfiniteCarousel = React.createClass({
 		this.events[this.touch ? 'onTouchMove' : 'onMouseMove'] = this.move;
 		this.events.onDragStart = this.noDrag;
 
-		this.childrenCount = this.props.children.length;
-
-		this.minPosition = this.getPagePosition(this.childrenCount - 1);
+		this.minPosition = this.getPagePosition(this.childrenCount() - 1);
 		this.maxPosition = this.getPagePosition(0);
 
 		this.getX = this.touch
 			? function(e) { return e.touches[0].clientX; }
-			: function(e) { return e.clientX };
+			: function(e) { return e.clientX; };
 	},
 	componentDidMount: function() {
 		this.containerWidth = this.refs.container.getDOMNode().offsetWidth;
 	},
 	getInitialState: function() {
-		var firstPage = 0;
 		return {
 			down: false,
 			startX: 0,
 			position: this.getPagePosition(1),
 			animate: false,
-			info: ''
+			info: '',
+			currentPage: 1
 		};
+	},
+	childrenCount: function() {
+		var count = 1;
+		if (this.props.iterator.hasNext()) {
+			count++;
+		}
+		if (this.props.iterator.hasPrevious()) {
+			count++;
+		}
+		return count;
 	},
 	getPagePosition: function(pageNumber) {
 		return pageNumber * -100;
@@ -64,21 +72,21 @@ var InfiniteCarousel = React.createClass({
 		this.setState({down: true, startX: x, animate: false});
 	},
 	end: function(e) {
-		// console.log('end');
 		if (this.state.down) {
+			// console.log('end', this.state);
 			var x = this.touch ? this.state.lastX : e.clientX;
 			var threshold = 30;
-			var page = 1;
-			if (page < (this.childrenCount - 1) && this.getOffsetPercent(x) < -threshold) {
-				// RECEIVE CALLBACK WHEN THE ANIMATION HAS FINISHED RUNNING
-				// INTEGRATE WITH D3
-				// SEND FEEDBACK: WE WANT MORE TRICK TO OPTIMIZE PERF BY THOSE WHO UNDERSTAND THE DOM DIFF ALGORITHM
-				// page++;
+			var page = this.state.currentPage;
+			var direction = null;
+			if (page < (this.childrenCount() - 1) && this.getOffsetPercent(x) < -threshold) {
+				page++;
+				direction = '+';
 			} else if (page > 0 && this.getOffsetPercent(x) > threshold) {
-				// page--;
+				page--;
+				direction = '-';
 			}
 			var position = this.getCurrentPosition(page, false, 0);
-			this.setState({down: false, startX: 0, currentPage: page, position: position, animate: true});
+			this.setState({down: false, startX: 0, currentPage: page, position: position, animate: true, direction: direction});
 		}
 	},
 	move: function(e) {
@@ -93,6 +101,17 @@ var InfiniteCarousel = React.createClass({
 	getPanesClasses: function(baseClass) {
 		var classes = [baseClass];
 		if (this.state.animate) {
+			var mover = this.refs.mover.getDOMNode();
+			var afterAnimate = function() {
+				mover.removeEventListener('webkitTransitionEnd', afterAnimate);
+				// if (this.state.direction === '+') {
+				// 	this.props.iterator.moveNext();
+				// } else if (this.state.direction === '-') {
+				// 	this.props.iterator.movePrevious();
+				// }
+				this.setState({animate: false, direction: null});
+			}.bind(this);
+			mover.addEventListener('webkitTransitionEnd', afterAnimate);
 			classes.push('animate');
 		}
 		return classes.join(' ');
@@ -105,7 +124,7 @@ var InfiniteCarousel = React.createClass({
 		}.bind(this);
 	},
 	renderItem: function(page, index) {
-		var width = (100 / this.childrenCount) + '%';
+		var width = (100 / this.childrenCount()) + '%';
 		return <CarouselItem width={width} key={index}>{page}</CarouselItem>;
 	},
 	noDrag: function(e) {
@@ -115,14 +134,16 @@ var InfiniteCarousel = React.createClass({
 	render: function() {
 		var style = {
 			left: this.state.position + '%',
-			width: (this.childrenCount * 100) + '%',
+			width: (this.childrenCount() * 100) + '%',
 			height: '100%'
 		};
 		return (
 			<div ref="container" {...this.props}>
 				<div className="info-bar">{this.state.info}</div>
-				<ul className={this.getPanesClasses('panes')} style={style} {...this.events}>
-					{this.props.children.map(this.renderItem)}
+				<ul ref="mover" className={this.getPanesClasses('panes')} style={style} {...this.events}>
+					{this.props.iterator.hasPrevious() ? this.renderItem(this.props.iterator.previous()) : null}
+					{this.renderItem(this.props.iterator.current())}
+					{this.props.iterator.hasNext() ? this.renderItem(this.props.iterator.next()) : null}
 				</ul>
 			</div>
 		);
@@ -131,7 +152,7 @@ var InfiniteCarousel = React.createClass({
 
 var CarouselItem = React.createClass({
 	shouldComponentUpdate: function() {
-		return false;
+		return true;
 	},
 	render: function() {
 		var style = {width: this.props.width};
@@ -139,17 +160,6 @@ var CarouselItem = React.createClass({
 	}
 });
 
-var createDivClass = function() {
-	return React.createClass({
-		render: function() {
-			return <div>{this.props.children}</div>;
-		}
-	});
-};
-
-InfiniteCarousel.Previous = createDivClass();
-InfiniteCarousel.Current = createDivClass();
-InfiniteCarousel.Next = createDivClass();
 
 module.exports = InfiniteCarousel;
 

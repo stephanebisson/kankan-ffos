@@ -1,7 +1,16 @@
-GOAL: infinite-ish scrolling
+GOAL: 
 
+- chrome
+- splash
+- one card screen (character, word type, sample sentence, pinyin, etc)
+- sample data file
+- routing
+- manifest
+- infinite-ish scrolling
 - fix firefox android
 - transition based on velocity OR offset
-- infinite scrolling (with only 3 panes in DOM)
 
-- kankan interface with hardcoded data file
+
+
+
+- FxOS store
