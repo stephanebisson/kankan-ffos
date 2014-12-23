@@ -8,6 +8,8 @@ var Header = BuildingBlocks.Header;
 var Section = BuildingBlocks.Section;
 var Footer = BuildingBlocks.Footer;
 
+var page = require('page');
+
 var createArrayIterator = function(elements) {
 	var index = 0,
 		first = 0,
@@ -52,25 +54,53 @@ var data = [
 		];
 
 
+
 var Splash = React.createClass({
+	startLearning: function() {
+		page('/card');
+	},
 	render: function() {
 		return (
-			<Section id="splash">
-				<h1>看看</h1>
-				<h2>Your Mandarin Flashcards</h2>
-			</Section>
+			<AppArea>
+				<Header title="Kan Kan" />
+				<Section id="splash">
+					<h1>看看</h1>
+					<h2>Your Mandarin Flashcards</h2>
+				</Section>
+				<Footer>
+					<button className="recommend" onClick={this.startLearning}>Start Learning</button>
+				</Footer>
+			</AppArea>
 		);
 	}
 });
-				// <Splash />
-				// <Footer>
-				// 	<button className="recommend" onClick={this.startLearning}>Start Learning</button>
-				// </Footer>
 
 
-var App = React.createClass({
-	startLearning: function() {
-		// navigate here
+
+var Card = React.createClass({
+	reveal: function() {
+		this.setState({revealed: true});
+	},
+	answerYes: function() {
+		page('/splash');
+	},
+	answerNo: function() {
+		page('/splash');
+	},
+	getInitialState: function() {
+		return {
+			revealed: false
+		};
+	},
+	footerButtons: function(revealed) {
+		if (revealed) {
+			return [
+				<button className="recommend" onClick={this.answerYes}>YES</button>,
+				<button className="" onClick={this.answerNo}>NO</button>
+			];
+		} else {
+			return [<button className="" onClick={this.reveal}>REVEAL</button>];
+		}
 	},
 	render: function() {
 		return (
@@ -78,12 +108,44 @@ var App = React.createClass({
 				<Header title="Kan Kan" />
 				<FlashCard character="看" />
 				<Footer>
-					<button className="recommend" onClick={this.startLearning}>YES</button>
-					<button className="" onClick={this.startLearning}>NO</button>
+					{this.footerButtons(this.state.revealed)}
 				</Footer>
 			</AppArea>
 		);
 	}
 });
 
-module.exports = App;
+
+
+var Router = React.createClass({
+	componentWillMount: function() {
+		var me = this;
+
+		var render = function(page) {
+			return function() {
+				me.setState({page: page});
+			};
+		};
+
+		page('/splash', render(<Splash />));
+		page('/card', render(<Card />));
+
+		page({hashbang: true});
+	},
+	componentDidMount: function() {
+		page('/splash');
+	},
+	getInitialState: function() {
+		return { 
+			page: <div />
+		};
+	},
+	render: function() {
+		return this.state.page;
+	}
+});
+
+module.exports = Router;
+
+
+

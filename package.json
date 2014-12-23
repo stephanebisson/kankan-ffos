@@ -40,14 +40,15 @@
     "testDirectoryName": "specs",
     "scriptPreprocessor": "specs/support/preprocessor.js",
     "testPathIgnorePatterns": [
-        "node_modules",
-        "specs/support"
+      "node_modules",
+      "specs/support"
     ],
     "unmockedModulePathPatterns": [
       "./node_modules/react"
     ]
   },
   "dependencies": {
+    "page": "^1.5.0",
     "react": "^0.12.1"
   }
 }
