@@ -2,6 +2,7 @@
 
 var React = require('react');
 var InfiniteCarousel = require('./infiniteCarousel.jsx');
+var FlashCard = require('./flashCard.jsx');
 var BuildingBlocks = require('./buildingBlocks.js');
 var AppArea = BuildingBlocks.AppArea;
 var Header = BuildingBlocks.Header;
@@ -62,6 +63,10 @@ var Splash = React.createClass({displayName: 'Splash',
 		);
 	}
 });
+				// <Splash />
+				// <Footer>
+				// 	<button className="recommend" onClick={this.startLearning}>Start Learning</button>
+				// </Footer>
 
 
 var App = React.createClass({displayName: 'App',
@@ -72,9 +77,10 @@ var App = React.createClass({displayName: 'App',
 		return (
 			React.createElement(AppArea, null, 
 				React.createElement(Header, {title: "Kan Kan"}), 
-				React.createElement(Splash, null), 
+				React.createElement(FlashCard, {character: "看"}), 
 				React.createElement(Footer, null, 
-					React.createElement("button", {className: "recommend", onClick: this.startLearning}, "Start Learning")
+					React.createElement("button", {className: "recommend", onClick: this.startLearning}, "YES"), 
+					React.createElement("button", {className: "", onClick: this.startLearning}, "NO")
 				)
 			)
 		);
@@ -83,7 +89,7 @@ var App = React.createClass({displayName: 'App',
 
 module.exports = App;
 
-},{"./buildingBlocks.js":"/Users/stephanebisson/dev/kankan-ffos/app/components/buildingBlocks.js","./infiniteCarousel.jsx":"/Users/stephanebisson/dev/kankan-ffos/app/components/infiniteCarousel.jsx","react":"/Users/stephanebisson/dev/kankan-ffos/node_modules/react/react.js"}],"/Users/stephanebisson/dev/kankan-ffos/app/components/buildingBlocks.js":[function(require,module,exports){
+},{"./buildingBlocks.js":"/Users/stephanebisson/dev/kankan-ffos/app/components/buildingBlocks.js","./flashCard.jsx":"/Users/stephanebisson/dev/kankan-ffos/app/components/flashCard.jsx","./infiniteCarousel.jsx":"/Users/stephanebisson/dev/kankan-ffos/app/components/infiniteCarousel.jsx","react":"/Users/stephanebisson/dev/kankan-ffos/node_modules/react/react.js"}],"/Users/stephanebisson/dev/kankan-ffos/app/components/buildingBlocks.js":[function(require,module,exports){
 var React = require('react');
 
 var AppArea = React.createClass({displayName: 'AppArea',
@@ -112,7 +118,7 @@ var Header = React.createClass({displayName: 'Header',
 var Section = React.createClass({displayName: 'Section',
 	render: function() {
 		return (
-			React.createElement("div", React.__spread({className: "scroll fit sticky"},  this.props), this.props.children)
+			React.createElement("div", React.__spread({className: "scroll fit sticky center"},  this.props), this.props.children)
 		);
 	}
 });
@@ -136,7 +142,26 @@ module.exports = {
 };
 
 
-},{"react":"/Users/stephanebisson/dev/kankan-ffos/node_modules/react/react.js"}],"/Users/stephanebisson/dev/kankan-ffos/app/components/infiniteCarousel.jsx":[function(require,module,exports){
+},{"react":"/Users/stephanebisson/dev/kankan-ffos/node_modules/react/react.js"}],"/Users/stephanebisson/dev/kankan-ffos/app/components/flashCard.jsx":[function(require,module,exports){
+var React = require('react');
+
+var BuildingBlocks = require('./buildingBlocks.js');
+var AppArea = BuildingBlocks.AppArea;
+var Header = BuildingBlocks.Header;
+var Section = BuildingBlocks.Section;
+var Footer = BuildingBlocks.Footer;
+
+module.exports = React.createClass({
+	displayName: 'FlashCard', 
+	render: function() {
+		return (
+			React.createElement(Section, {id: "flashCard"}, 
+				React.createElement("h1", null, this.props.character)
+			)
+		);
+	}
+});
+},{"./buildingBlocks.js":"/Users/stephanebisson/dev/kankan-ffos/app/components/buildingBlocks.js","react":"/Users/stephanebisson/dev/kankan-ffos/node_modules/react/react.js"}],"/Users/stephanebisson/dev/kankan-ffos/app/components/infiniteCarousel.jsx":[function(require,module,exports){
 var React = require('react');
 
 var InfiniteCarousel = React.createClass({displayName: 'InfiniteCarousel',

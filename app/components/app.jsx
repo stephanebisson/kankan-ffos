@@ -1,6 +1,7 @@
 
 var React = require('react');
 var InfiniteCarousel = require('./infiniteCarousel.jsx');
+var FlashCard = require('./flashCard.jsx');
 var BuildingBlocks = require('./buildingBlocks.js');
 var AppArea = BuildingBlocks.AppArea;
 var Header = BuildingBlocks.Header;
@@ -61,6 +62,10 @@ var Splash = React.createClass({
 		);
 	}
 });
+				// <Splash />
+				// <Footer>
+				// 	<button className="recommend" onClick={this.startLearning}>Start Learning</button>
+				// </Footer>
 
 
 var App = React.createClass({
@@ -71,9 +76,10 @@ var App = React.createClass({
 		return (
 			<AppArea>
 				<Header title="Kan Kan" />
-				<Splash />
+				<FlashCard character="看" />
 				<Footer>
-					<button className="recommend" onClick={this.startLearning}>Start Learning</button>
+					<button className="recommend" onClick={this.startLearning}>YES</button>
+					<button className="" onClick={this.startLearning}>NO</button>
 				</Footer>
 			</AppArea>
 		);

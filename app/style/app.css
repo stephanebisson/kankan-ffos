@@ -108,8 +108,7 @@ img {
 	display: none;
 }
 
-
-#splash {
+.center {
 	text-align: center;
 }
 
@@ -117,6 +116,8 @@ img {
 	font-size: 100px;
 }
 
-
+#flashCard > h1 {
+	font-size: 100px;
+}
 
 

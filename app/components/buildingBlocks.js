@@ -26,7 +26,7 @@ var Header = React.createClass({
 var Section = React.createClass({
 	render: function() {
 		return (
-			<div className="scroll fit sticky" {...this.props}>{this.props.children}</div>
+			<div className="scroll fit sticky center" {...this.props}>{this.props.children}</div>
 		);
 	}
 });

@@ -1,8 +1,5 @@
-GOAL: 
+GOAL: one card screen (character, word type, sample sentence, pinyin, etc)
 
-- chrome
-- splash
-- one card screen (character, word type, sample sentence, pinyin, etc)
 - sample data file
 - routing
 - manifest
