@@ -77,7 +77,6 @@ var Splash = React.createClass({displayName: 'Splash',
 });
 
 
-
 var Card = React.createClass({displayName: 'Card',
 	reveal: function() {
 		this.setState({revealed: true});
@@ -90,24 +89,35 @@ var Card = React.createClass({displayName: 'Card',
 	},
 	getInitialState: function() {
 		return {
-			revealed: false
+			revealed: false,
+			character: '看'
 		};
 	},
 	footerButtons: function(revealed) {
 		if (revealed) {
 			return [
-				React.createElement("button", {className: "recommend", onClick: this.answerYes}, "YES"),
-				React.createElement("button", {className: "", onClick: this.answerNo}, "NO")
+				React.createElement("button", {className: "", onClick: this.answerNo}, "No clue"),
+				React.createElement("button", {className: "recommend", onClick: this.answerYes}, "I knew it!")
 			];
 		} else {
 			return [React.createElement("button", {className: "", onClick: this.reveal}, "REVEAL")];
 		}
 	},
+	details: function() {
+		return [
+			React.createElement("p", null, "Kàn"),
+			React.createElement("p", null, "verb"),
+			React.createElement("p", null, "to see, to watch, to read")
+		];
+	},
 	render: function() {
 		return (
 			React.createElement(AppArea, null, 
 				React.createElement(Header, {title: "Kan Kan"}), 
-				React.createElement(FlashCard, {character: "看"}), 
+				React.createElement(Section, {id: "flashCard"}, 
+					React.createElement("h1", null, this.state.character), 
+					this.state.revealed ? this.details() : false
+				), 
 				React.createElement(Footer, null, 
 					this.footerButtons(this.state.revealed)
 				)

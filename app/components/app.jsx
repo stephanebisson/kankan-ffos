@@ -76,7 +76,6 @@ var Splash = React.createClass({
 });
 
 
-
 var Card = React.createClass({
 	reveal: function() {
 		this.setState({revealed: true});
@@ -89,24 +88,35 @@ var Card = React.createClass({
 	},
 	getInitialState: function() {
 		return {
-			revealed: false
+			revealed: false,
+			character: '看'
 		};
 	},
 	footerButtons: function(revealed) {
 		if (revealed) {
 			return [
-				<button className="recommend" onClick={this.answerYes}>YES</button>,
-				<button className="" onClick={this.answerNo}>NO</button>
+				<button className="" onClick={this.answerNo}>No clue</button>,
+				<button className="recommend" onClick={this.answerYes}>I knew it!</button>
 			];
 		} else {
 			return [<button className="" onClick={this.reveal}>REVEAL</button>];
 		}
 	},
+	details: function() {
+		return [
+			<p>Kàn</p>,
+			<p>verb</p>,
+			<p>to see, to watch, to read</p>
+		];
+	},
 	render: function() {
 		return (
 			<AppArea>
 				<Header title="Kan Kan" />
-				<FlashCard character="看" />
+				<Section id="flashCard">
+					<h1>{this.state.character}</h1>
+					{this.state.revealed ? this.details() : false}
+				</Section>
 				<Footer>
 					{this.footerButtons(this.state.revealed)}
 				</Footer>

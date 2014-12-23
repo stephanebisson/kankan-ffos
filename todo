@@ -1,13 +1,13 @@
-GOAL: one card screen (character, word type, sample sentence, pinyin, etc)
+GOAL:
 
 - sample data file
-- routing
+
 - manifest
 - infinite-ish scrolling
-- fix firefox android
 - transition based on velocity OR offset
 
 
 
+- fix firefox android
 
 - FxOS store
