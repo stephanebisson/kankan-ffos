@@ -75,22 +75,51 @@ var Splash = React.createClass({
 	}
 });
 
+var data = require('../data.json');
+
+var getRandomInt = function (min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
+console.log('data size:', data.length);
+
+var getRandomCard = function() {
+	// return {
+	// 	character: '看',
+	// 	pinyin: 'Kàn',
+	// 	wordType: 'Verb',
+	// 	definitions: [
+	// 		'to see',
+	// 		'to watch',
+	// 		'to read'
+	// 	]
+	// };
+
+	var index = getRandomInt(0, data.length - 1);
+	return data[index];
+};
+
+var pinyin = require('prettify-pinyin');
 
 var Card = React.createClass({
 	reveal: function() {
 		this.setState({revealed: true});
 	},
 	answerYes: function() {
-		page('/splash');
+		// page('/splash');
+		this.reset();
 	},
 	answerNo: function() {
 		page('/splash');
 	},
+	componentWillMount: function() {
+		this.setState({character: getRandomCard()});
+	},
+	reset: function() {
+		this.setState({character: getRandomCard(), revealed: false});	
+	},
 	getInitialState: function() {
-		return {
-			revealed: false,
-			character: '看'
-		};
+		return { revealed: false };
 	},
 	footerButtons: function(revealed) {
 		if (revealed) {
@@ -104,9 +133,8 @@ var Card = React.createClass({
 	},
 	details: function() {
 		return [
-			<p>Kàn</p>,
-			<p>verb</p>,
-			<p>to see, to watch, to read</p>
+			<p>{pinyin.prettify(this.state.character.pinyin)}</p>,
+			<p>{this.state.character.definitions.join(', ')}</p>
 		];
 	},
 	render: function() {
@@ -114,7 +142,7 @@ var Card = React.createClass({
 			<AppArea>
 				<Header title="Kan Kan" />
 				<Section id="flashCard">
-					<h1>{this.state.character}</h1>
+					<h1>{this.state.character.character}</h1>
 					{this.state.revealed ? this.details() : false}
 				</Section>
 				<Footer>
