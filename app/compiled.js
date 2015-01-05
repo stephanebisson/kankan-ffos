@@ -436,7 +436,7 @@ window.React = React;
 var App = require('./app.jsx');
 React.render(React.createElement(App, null), document.body);
 },{"./app.jsx":"/Users/stephanebisson/dev/kankan-ffos/app/components/app.jsx","react":"/Users/stephanebisson/dev/kankan-ffos/node_modules/react/react.js"}],"/Users/stephanebisson/dev/kankan-ffos/app/data.json":[function(require,module,exports){
-module.exports=module.exports=[
+module.exports=module.exports=module.exports=[
 {"character":"㐄","size":1,"pinyin":"kua4","definitions":["component in Chinese characters, mirror image of 夂[zhi3]"]}
 ,
 {"character":"㐆","size":1,"pinyin":"yin3","definitions":["component in Chinese character 殷[yin1]"]}
